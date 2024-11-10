@@ -38,7 +38,7 @@ To run this game locally:
 2. Open the `index.html` file in your favorite browser.
 
 ## Screenshots
-![Screenshot of Game](screenshot.png)
+![Screenshot of Game](./assets/images/rsp.jpg)
 
 ## Credits
 This project was created by Dustin Moore. Special thanks to everyone who provided feedback and inspiration along the way.
