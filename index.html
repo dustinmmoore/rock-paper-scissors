@@ -1,0 +1,202 @@
+<!-- Created by Dustin Moore -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock Paper Scissors Game</title>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      background: #000000;
+      color: #ffffff;
+      transition: background 0.3s, color 0.3s;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    button {
+      font-size: 1.2rem;
+      margin: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background-color: #3a3a3a;
+      color: #ffffff;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+    button:active {
+      transform: scale(0.95);
+    }
+    button:hover {
+      background-color: #555555;
+    }
+    #result {
+      margin-top: 30px;
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+    #score {
+      margin-top: 20px;
+      font-size: 1.5rem;
+    }
+    .container {
+      max-width: 90%;
+      margin: 0 auto;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+    }
+    #theme-toggle {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #f0ad4e;
+      color: #ffffff;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    #theme-toggle:hover {
+      background-color: #ec971f;
+    }
+    #restart {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #28a745;
+      color: #ffffff;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      display: none;
+    }
+    #restart:hover {
+      background-color: #218838;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <h1>Rock, Paper, Scissors Game</h1>
+    <div>
+      <button id="rock-button">Rock</button>
+      <button id="paper-button">Paper</button>
+      <button id="scissors-button">Scissors</button>
+    </div>
+    <div id="result"></div>
+    <div id="score"></div>
+    <button id="theme-toggle">Switch to Light Theme</button>
+    <button id="restart">Restart Game</button>
+  </div>
+
+  <script>
+    let humanScore = 0;
+    let computerScore = 0;
+    let darkTheme = true;
+
+    const addEventListeners = (element, events, handler) => {
+      events.forEach(event => {
+        element.addEventListener(event, function(e) {
+          e.preventDefault();
+          handler();
+        });
+      });
+    };
+
+    addEventListeners(document.getElementById("rock-button"), ["click", "touchend"], function() {
+      playGame("rock");
+    });
+
+    addEventListeners(document.getElementById("paper-button"), ["click", "touchend"], function() {
+      playGame("paper");
+    });
+
+    addEventListeners(document.getElementById("scissors-button"), ["click", "touchend"], function() {
+      playGame("scissors");
+    });
+
+    addEventListeners(document.getElementById("theme-toggle"), ["click", "touchend"], function() {
+      toggleTheme();
+    });
+
+    addEventListeners(document.getElementById("restart"), ["click", "touchend"], function() {
+      restartGame();
+    });
+
+    function getComputerChoice() {
+      const randomNum = Math.floor(Math.random() * 3);
+      if (randomNum === 0) {
+        return "rock";
+      } else if (randomNum === 1) {
+        return "paper";
+      } else {
+        return "scissors";
+      }
+    }
+
+    function playRound(humanChoice, computerChoice) {
+      if (humanChoice === computerChoice) {
+        return `It's a tie! Both chose ${humanChoice}.`;
+      } else if (
+        (humanChoice === "rock" && computerChoice === "scissors") ||
+        (humanChoice === "paper" && computerChoice === "rock") ||
+        (humanChoice === "scissors" && computerChoice === "paper")
+      ) {
+        humanScore++;
+        return `You win! ${humanChoice} beats ${computerChoice}.`;
+      } else {
+        computerScore++;
+        return `You lose! ${computerChoice} beats ${humanChoice}.`;
+      }
+    }
+
+    function playGame(humanChoice) {
+      if (humanScore < 5 && computerScore < 5) {
+        const computerChoice = getComputerChoice();
+        const result = playRound(humanChoice, computerChoice);
+        document.getElementById("result").innerText = result;
+        document.getElementById("score").innerText = `Score - You: ${humanScore}, Computer: ${computerScore}`;
+      }
+
+      if (humanScore === 5 || computerScore === 5) {
+        const winner = humanScore === 5 ? 'You win the game!' : 'Computer wins the game!';
+        document.getElementById("result").innerText = winner;
+        document.getElementById("restart").style.display = "inline-block";
+      }
+    }
+
+    function toggleTheme() {
+      darkTheme = !darkTheme;
+      if (darkTheme) {
+        document.body.style.background = "#000000";
+        document.body.style.color = "#ffffff";
+        document.querySelector('.container').style.background = "rgba(255, 255, 255, 0.1)";
+        document.getElementById("theme-toggle").innerText = "Switch to Light Theme";
+      } else {
+        document.body.style.background = "#ffffff";
+        document.body.style.color = "#000000";
+        document.querySelector('.container').style.background = "rgba(0, 0, 0, 0.1)";
+        document.getElementById("theme-toggle").innerText = "Switch to Dark Theme";
+      }
+    }
+
+    function restartGame() {
+      humanScore = 0;
+      computerScore = 0;
+      document.getElementById("result").innerText = "";
+      document.getElementById("score").innerText = "";
+      document.getElementById("restart").style.display = "none";
+    }
+  </script>
+</body>
+</html>
